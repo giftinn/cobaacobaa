@@ -14,7 +14,7 @@ const stations=[
 f:88.7,
 html:`
 <div class="songCard">
-<img class="cover" src="pict.jpg">
+<img class="cover" src="src/pict.jpg">
 <div class="songInfo">
 <div>Mystery of Love</div>
 <div style="font-size:12px;opacity:.7;margin-bottom:10px">Sufjan Stevens</div>
@@ -45,19 +45,19 @@ html:`
 <div style="position:absolute;top:5px;width:100%;overflow:hidden;">
 <div class="filmTrack">
 
-<img src="1.jpg" class="filmPic">
-<img src="2.jpg" class="filmPic">
-<img src="3.jpg" class="filmPic">
-<img src="4.jpg" class="filmPic">
-<img src="5.jpg" class="filmPic">
-<img src="pict.jpg" class="filmPic">
+<img src="src/1.jpg" class="filmPic">
+<img src="src/2.jpg" class="filmPic">
+<img src="src/3.jpg" class="filmPic">
+<img src="src/4.jpg" class="filmPic">
+<img src="src/5.jpg" class="filmPic">
+<img src="src/pict.jpg" class="filmPic">
 
-<img src="1.jpg" class="filmPic">
-<img src="2.jpg" class="filmPic">
-<img src="3.jpg" class="filmPic">
-<img src="4.jpg" class="filmPic">
-<img src="5.jpg" class="filmPic">
-<img src="pict.jpg" class="filmPic">
+<img src="src/1.jpg" class="filmPic">
+<img src="src/2.jpg" class="filmPic">
+<img src="src/3.jpg" class="filmPic">
+<img src="src/4.jpg" class="filmPic">
+<img src="src/5.jpg" class="filmPic">
+<img src="src/pict.jpg" class="filmPic">
 
 </div>
 </div>
@@ -361,7 +361,7 @@ display.innerHTML=`${freq.toFixed(1)} FM<div class="staticLayer"></div>`;
 function togglePlay(){
 const btn=document.getElementById("playBtn");
 if(audio.paused){
-audio.src="song.mp3";
+audio.src="src/song.mp3";
 audio.play();
 btn.textContent="⏸";
 }else{
