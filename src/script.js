@@ -320,43 +320,58 @@ color:#ffbf69;
 
 ];
 
-drag.onmousedown=()=>dragging=true;
-   window.onmouseup=()=>dragging=false;
-   window.onmousemove=e=>{
+function updatePosition(clientX){
+ const rect=drag.getBoundingClientRect();
+ percent=(clientX-rect.left)/rect.width;
+ percent=Math.max(0,Math.min(1,percent));
+ needle.style.left=(percent*100)+"%";
+ checkStation();
+}
 
- if(!dragging)return;
-const rect=drag.getBoundingClientRect();
-   percent=(e.clientX-rect.left)/rect.width;
-   percent=Math.max(0,Math.min(1,percent));
-   needle.style.left=(percent*100)+"%";
-checkStation();
-};
-
-function checkStation(){
-const freq=(88+percent*20);
-let found=null;
-
-stations.forEach(s=>{
-if(Math.abs(freq-s.f)<0.25) found=s;
+/* mouse support */
+drag.addEventListener("mousedown",()=>dragging=true);
+window.addEventListener("mouseup",()=>dragging=false);
+window.addEventListener("mousemove",e=>{
+ if(!dragging) return;
+ updatePosition(e.clientX);
 });
 
-if(found){
-if(currentStation!==found){
-lamp.classList.add("on");
-noise.pause();
-display.innerHTML=found.html;
-currentStation=found;
+/* touch support (HP) */
+drag.addEventListener("touchstart",()=>dragging=true);
+window.addEventListener("touchend",()=>dragging=false);
+window.addEventListener("touchmove",e=>{
+ if(!dragging) return;
+ updatePosition(e.touches[0].clientX);
+});
+
+function checkStation(){
+ const freq=(88+percent*20);
+ let found=null;
+
+ stations.forEach(s=>{
+  if(Math.abs(freq-s.f)<0.25) found=s;
+ });
+
+ if(found){
+  if(currentStation!==found){
+   lamp.classList.add("on");
+   noise.pause();
+   display.innerHTML=found.html;
+   currentStation=found;
+  }
+ }
+ 
+ else{
+  if(currentStation!==null){
+   lamp.classList.remove("on");
+   audio.pause();
+   noise.play();
+   currentStation=null;
+  }
+  display.innerHTML=`${freq.toFixed(1)} FM<div class="staticLayer"></div>`;
+ }
 }
-}else{
-if(currentStation!==null){
-lamp.classList.remove("on");
-audio.pause();
-noise.play();
-currentStation=null;
-}
-display.innerHTML=`${freq.toFixed(1)} FM<div class="staticLayer"></div>`;
-}
-}
+
 
 function togglePlay(){
 const btn=document.getElementById("playBtn");
@@ -415,11 +430,23 @@ const spikeSound=new Audio("https://cdn.freesound.org/previews/250/250629_448618
 let love = 72;
 let holding = false;
 
-/* HOLD DETECTOR */
-document.addEventListener("mousedown", e=>{
-if(e.target.closest(".loveStation")) holding=true;
+function isLoveTarget(e){
+ return e.target.closest(".loveStation");
+}
+
+/* mouse */
+document.addEventListener("mousedown",e=>{
+ if(isLoveTarget(e)) holding=true;
 });
 document.addEventListener("mouseup",()=>holding=false);
+
+/* touch */
+document.addEventListener("touchstart",e=>{
+ if(isLoveTarget(e)) holding=true;
+},{passive:true});
+
+document.addEventListener("touchend",()=>holding=false);
+document.addEventListener("touchcancel",()=>holding=false);
 
 /* MAIN ENGINE */
 setInterval(()=>{
